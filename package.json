@@ -1,0 +1,14 @@
+{
+    "private": true,
+    "scripts": {
+        "hot": "vite --host",
+        "watch": "vite build --w",
+        "dev": "NODE_ENV=development vite build",
+        "prod": "vite build"
+    },
+    "devDependencies": {
+        "axios": "^1.1.2",
+        "laravel-vite-plugin": "^0.7.5",
+        "vite": "^4.0.0"
+    }
+}

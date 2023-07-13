@@ -1,7 +1,6 @@
 /nginx/logs/
 /nginx/sites-available/default.conf
 /app/logs/
-/database/postgres/
 /database/redis/
 
 
