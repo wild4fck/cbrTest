@@ -20,6 +20,7 @@ yarn-error.log
 /.cache
 /.config
 /.local
+/.yarn
 
 docker-compose.yml
 

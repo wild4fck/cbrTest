@@ -18,3 +18,5 @@ use App\Http\Controllers\RateController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('comparison-with-yesterday', [RateController::class, 'getComparisonWithYesterday']);
