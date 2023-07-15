@@ -23,7 +23,7 @@ class CbrClient extends BaseRateClientAbstract
     public function getRate(Carbon $date, string $currencyCode, string $baseCurrencyCode): float
     {
         $dateString = $date->format('d.m.Y');
-        $cacheKey = "rate_list:$dateString:$currencyCode:$baseCurrencyCode";
+        $cacheKey = "rate_list:$dateString";
         
         //Поиск в кэше (если пусто - запрашиваем)
         $body = Cache::get($cacheKey);

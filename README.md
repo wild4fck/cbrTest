@@ -44,27 +44,36 @@ copy .\docker\nginx\sites-available\default.conf.example .\docker\nginx\sites-av
 #### Linux/Mac:
 ```
 cp .env.example "$(basename .env.example .example)"
-cp docker-compose.yml.example "$(basename .env.example .example)"
+cp docker-compose.yml.example "$(basename docker-compose.yml.example .example)"
+cp ./docker/app/php-ini-overrides.ini.example ./docker/app/"$(basename php-ini-overrides.ini.example .example)"
+cp ./docker/nginx/sites-available/default.conf.example ./docker/nginx/sites-available/"$(basename default.conf.example .example)"
 ```
 
 ### 2. Собираем `Docker` контейнеры
 ```
-(cd docker && docker-compose build)
+cd .\docker\; docker-compose build; cd ..
 ```
 
 ### 3. Запустим контейнеры
 ```
-docker-compose up
+docker-compose up -d
 ```
 
 ### 4. Запуск команд внутри контейнера
-#### Windows:
-```powershell
-docker-compose exec cbr_app cmd /C "composer install & php artisan key:generate & php artisan migrate"
+#### Установка зависимостей
+
 ```
-#### Linux/Mac:
+docker exec cbr_app sh -c 'composer install; php artisan key:generate; php artisan config:cache; php artisan config:clear'
 ```
-docker-compose exec cbr_app sh -c 'composer install; php artisan key:generate; php artisan migrate'
+
+#### Создаём БД
+```
+docker exec -it cbr_pg createdb -U postgres cbr
+```
+
+#### Выполняем миграции
+```
+docker exec -it cbr_app php artisan migrate
 ```
 
 # Описание API
@@ -116,7 +125,7 @@ Content-Type: application/json
 
 # Команда для запуска запроса данных за последние полгода
 ### `php artisan rate:request {currencyCode} {baseCurrencyCode?}`
-#### Пример запроса ```docker-compose exec cbr_app php artisan rate:request USD```
+#### Пример запроса ```docker exec cbr_app php artisan rate:request USD```
 #### Пример ответа
 ```
 Запуск запроса
@@ -127,7 +136,7 @@ Content-Type: application/json
 
 # Команда для проверки результат запроса
 ### `php artisan rate:check-result {uuid}`
-#### Пример запроса ```docker-compose exec cbr_app php artisan rate:check-result e1af8d7c-040c-368c-a471-e186344ee893```
+#### Пример запроса ```docker exec cbr_app php artisan rate:check-result e1af8d7c-040c-368c-a471-e186344ee893```
 #### Пример ответа
 ```
 {#660 // app/Console/Commands/HalfYearRatesCheckResult.php:33
