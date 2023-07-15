@@ -36,8 +36,10 @@
 ### 1. Разворачиваем `.example` файлы
 #### Windows:
 ```powershell
-Copy-Item -Path ".env.example" -Destination { $_.FullName -replace '\.example$', '' }
-Copy-Item -Path "docker-compose.yml.example" -Destination { $_.FullName -replace '\.example$', '' }
+copy .env.example .env
+copy docker-compose.yml.example docker-compose.yml
+copy .\docker\app\php-ini-overrides.ini.example .\docker\app\php-ini-overrides.ini
+copy .\docker\nginx\sites-available\default.conf.example .\docker\nginx\sites-available\default.conf
 ```
 #### Linux/Mac:
 ```
