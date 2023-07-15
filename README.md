@@ -6,7 +6,7 @@
 
 Все запросы в классе `CbrClient` кэшируются с помощью Redis (выбран как `CACHE_DRIVER` в `.env`)
 
-Задача про получение данных за пол года могла выполняться 2 способами:
+Задача про получение данных за полгода могла выполняться 2 способами:
 * Цикличное обращение к ЦБ РФ и запрос данных на каждую дату за 180 предыдущих дней
 * Запрос к специальному методу в ЦБ РФ где мы получаем данные в разрезе "от и до"
 
@@ -58,11 +58,11 @@ docker-compose up
 ### 4. Запуск команд внутри контейнера
 #### Windows:
 ```powershell
-docker-compose exec cbr_app cmd /C "composer install & php artisan key:generate"
+docker-compose exec cbr_app cmd /C "composer install & php artisan key:generate & php artisan migrate"
 ```
 #### Linux/Mac:
 ```
-docker-compose exec cbr_app sh -c 'composer install; php artisan key:generate'
+docker-compose exec cbr_app sh -c 'composer install; php artisan key:generate; php artisan migrate'
 ```
 
 # Описание API
@@ -112,7 +112,7 @@ Content-Type: application/json
 }
 ```
 
-# Команда для запуска запроса данных за последние пол года
+# Команда для запуска запроса данных за последние полгода
 ### `php artisan rate:request {currencyCode} {baseCurrencyCode?}`
 #### Пример запроса ```docker-compose exec cbr_app php artisan rate:request USD```
 #### Пример ответа
