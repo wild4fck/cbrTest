@@ -58,7 +58,13 @@ docker-compose build
 ```
 docker-compose up -d
 ```
+В случае неудачной сборки или запуска добавьте 
+директорию проекта в список разрешенных в настройках Docker desktop
+`Preferences -> Resources -> FILE SHARING`
+и повторите команду
+
 (`Worker` запускается автоматически как отдельный контейнер)
+
 ### 4. Запуск команд внутри контейнера
 #### Установка зависимостей
 ```
@@ -67,6 +73,12 @@ docker exec cbr_app sh -c 'composer install; php artisan key:generate'
 #### Выполняем миграции
 ```
 docker exec -it cbr_app php artisan migrate
+```
+База данных должна создаваться в процессе билда контейнера cbr_pg. 
+В случае возникновения ошибки, указывающей на отсутствующую БД в процессе выполнения миграций, 
+выполните команду ниже и повторите верхнюю.
+```
+docker exec -it cbr_pg createdb -U postgres cbr
 ```
 
 # Описание API
