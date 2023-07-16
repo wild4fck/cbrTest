@@ -19,7 +19,7 @@ class HalfYearRatesCheckResult extends Command
     {
         $uuid = $this->argument('uuid');
         $data = Redis::lrange('rateHalfYear', 0, -1);
-    
+        
         $result = array_filter($data, static function ($json) use ($uuid) {
             $item = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
             return ($item && $item['uuid'] === $uuid);

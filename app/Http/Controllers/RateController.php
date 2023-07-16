@@ -6,7 +6,6 @@ use Rate;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
-use App\Services\RateService\RateService;
 use App\Http\Requests\ComparisonWithYesterdayRequest;
 
 class RateController extends Controller

@@ -32,7 +32,7 @@
 так как запрос выполняется очень быстро (за счет выбора второго подхода к решению задачи).
 
 # Установка и запуск проекта
-
+(Предполагается выполнение всех команд в корне проекта)
 ### 1. Разворачиваем `.example` файлы
 #### Windows:
 ```powershell
@@ -51,26 +51,19 @@ cp ./docker/nginx/sites-available/default.conf.example ./docker/nginx/sites-avai
 
 ### 2. Собираем `Docker` контейнеры
 ```
-cd .\docker\; docker-compose build; cd ..
+docker-compose build
 ```
 
 ### 3. Запустим контейнеры
 ```
 docker-compose up -d
 ```
-
+(`Worker` запускается автоматически как отдельный контейнер)
 ### 4. Запуск команд внутри контейнера
 #### Установка зависимостей
-
 ```
-docker exec cbr_app sh -c 'composer install; php artisan key:generate; php artisan config:cache; php artisan config:clear'
+docker exec cbr_app sh -c 'composer install; php artisan key:generate'
 ```
-
-#### Создаём БД
-```
-docker exec -it cbr_pg createdb -U postgres cbr
-```
-
 #### Выполняем миграции
 ```
 docker exec -it cbr_app php artisan migrate
@@ -125,7 +118,10 @@ Content-Type: application/json
 
 # Команда для запуска запроса данных за последние полгода
 ### `php artisan rate:request {currencyCode} {baseCurrencyCode?}`
-#### Пример запроса ```docker exec cbr_app php artisan rate:request USD```
+#### Пример запроса
+```
+docker exec cbr_app php artisan rate:request USD
+```
 #### Пример ответа
 ```
 Запуск запроса
@@ -136,7 +132,10 @@ Content-Type: application/json
 
 # Команда для проверки результат запроса
 ### `php artisan rate:check-result {uuid}`
-#### Пример запроса ```docker exec cbr_app php artisan rate:check-result e1af8d7c-040c-368c-a471-e186344ee893```
+#### Пример запроса
+```
+docker exec cbr_app php artisan rate:check-result e1af8d7c-040c-368c-a471-e186344ee893
+```
 #### Пример ответа
 ```
 {#660 // app/Console/Commands/HalfYearRatesCheckResult.php:33

@@ -7,17 +7,16 @@ use RuntimeException;
 use SimpleXMLElement;
 use Illuminate\Support\Facades\Cache;
 use GuzzleHttp\Exception\GuzzleException;
+use App\Services\RateService\RateService;
 
 /**
  * @author Wild4fck <wild4fck@yandex.ru>
  */
 class CbrClient extends BaseRateClientAbstract
 {
-    private const URLs = [
-        'daily' => 'XML_daily.asp',
-        'val_full' => 'XML_valFull.asp',
-        'dynamic' => 'XML_dynamic.asp',
-    ];
+    private const DAILY_REQUEST = 'XML_daily.asp';
+    private const VAL_FULL_REQUEST = 'XML_valFull.asp';
+    private const DYNAMIC_REQUEST = 'XML_dynamic.asp';
     
     /** @inheritDoc */
     public function getRate(Carbon $date, string $currencyCode, string $baseCurrencyCode): float
@@ -31,7 +30,7 @@ class CbrClient extends BaseRateClientAbstract
         if (!$body) {
             try {
                 //Запрос котировок валют на дату
-                $response = $this->getRequest(self::URLs['daily'], [
+                $response = $this->getRequest(self::DAILY_REQUEST, [
                     'date_req' => $dateString,
                 ]);
                 $body = (string)$response->getBody();
@@ -64,7 +63,7 @@ class CbrClient extends BaseRateClientAbstract
         if (!$body) {
             $currencyCode = $this->getCurrencyCode($currencyCharCode);
             try {
-                $response = $this->getRequest(self::URLs['dynamic'], [
+                $response = $this->getRequest(self::DYNAMIC_REQUEST, [
                     'date_req1' => $firstDateFormat,
                     'date_req2' => $todayFormat,
                     'VAL_NM_RQ' => $currencyCode,
@@ -101,7 +100,7 @@ class CbrClient extends BaseRateClientAbstract
         }
         
         try {
-            $response = $this->getRequest(self::URLs['val_full']);
+            $response = $this->getRequest(self::VAL_FULL_REQUEST);
             $body = (string)$response->getBody();
             
             Cache::put($cacheKey, $body);
@@ -123,7 +122,7 @@ class CbrClient extends BaseRateClientAbstract
         $item = simplexml_load_string($currencyCodesXmlString)->xpath("Item[ISO_Char_Code='$charCode']");
         
         if (empty($item)) {
-            throw new RuntimeException('Valute not found.');
+            throw new RuntimeException("Currency '$charCode' not found.");
         }
         
         return trim((string)$item[0]->ParentCode);
@@ -165,7 +164,7 @@ class CbrClient extends BaseRateClientAbstract
         $valuteValue = $this->xmlObjectValueToFloat($valute[0]->Value);
         
         //Если базовая - Рубль, возвращаем курс, иначе высчитываем через рубль
-        if ($baseCurrencyCode === 'RUR') {
+        if ($baseCurrencyCode === RateService::DEFAULT_VALUTA_CODE) {
             return $valuteValue;
         }
         
