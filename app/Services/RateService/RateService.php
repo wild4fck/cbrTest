@@ -43,7 +43,7 @@ class RateService
         $difference = $rate - $previousRate;
         
         return [
-            'rate' => $rate,
+            'rate' => round($rate, 4),
             'difference' => round($difference, 4),
         ];
     }
