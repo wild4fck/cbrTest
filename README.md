@@ -142,7 +142,7 @@ docker exec cbr_app php artisan rate:request USD
 Для проверки результат запустите команду: php artisan rate:check-result e1af8d7c-040c-368c-a471-e186344ee893
 ```
 
-# Команда для проверки результат запроса
+# Команда для проверки результата запроса
 ### `php artisan rate:check-result {uuid}`
 #### Пример запроса
 ```
